@@ -4,10 +4,12 @@
 
 class InputManager
 {
-	public:
-		InputManager();
-		void Initialise(GLFWwindow* window);
-		bool isKeyPressed(int key);
+public:
+	InputManager();
+	void Initialise(GLFWwindow* window);
+	bool isKeyPressed(int key);
+	double getMouseDeltaY() { return deltaY; }
+	double getMouseDeltaX() { return deltaX; }
 
 	private:
 		GLFWwindow* window;

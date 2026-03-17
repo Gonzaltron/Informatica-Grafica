@@ -12,6 +12,8 @@ void InputManager::Initialise(GLFWwindow* newwindow)
 	window = newwindow;
 	instance = this;
 	glfwSetKeyCallback(window, handleKeys);
+	glfwSetCursorPosCallback(window, handleMouse);
+
 }
 
 bool InputManager::isKeyPressed(int key)
