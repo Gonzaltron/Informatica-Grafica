@@ -15,6 +15,7 @@
 #include "Mesh.h"
 #include "Shader.h"
 #include "Window.h"
+#include "InputManager.h"
 
 const GLint WIDTH = 800, HEIGHT = 600;
 const float TORADIANS = M_PI / 180.0f;
@@ -26,7 +27,7 @@ std::vector<Mesh*> meshList;
 std::vector<Shader*> shaderList;
 
 
-
+InputManager input;
 //Vertex shader
 static const char* vShader = "Shaders/shader.vert";
 //Fragment shader
@@ -62,7 +63,8 @@ int main()
 {
     Window mainWindow = Window(WIDTH, HEIGHT);
     mainWindow.Initialize();
-
+    input = InputManager();
+    input.Initialise(mainWindow.getWindow());
     CreateShader();
     CreateTriangle();
 
@@ -76,6 +78,11 @@ int main()
     while (!mainWindow.getWindowShouldClose()) {
 
         glfwPollEvents();
+
+        if (input.isKeyPressed(GLFW_KEY_A))
+        {
+            std::cout << "A";
+        }
 
         float currentTime = (float)glfwGetTime();
         deltaTime = currentTime - lastTime;

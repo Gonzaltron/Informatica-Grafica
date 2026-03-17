@@ -12,6 +12,7 @@ public:
 	GLint getBufferHeight() { return bufferHeight; }
 	void swapBuffers() { glfwSwapBuffers(window); }
 	bool getWindowShouldClose() { return glfwWindowShouldClose(window); }
+	GLFWwindow* getWindow() { return window; }
 	~Window();
 private:
 	GLFWwindow* window;

@@ -6,7 +6,6 @@ class InputManager
 {
 	public:
 		InputManager();
-		~InputManager();
 		void Initialise(GLFWwindow* window);
 		bool isKeyPressed(int key);
 
