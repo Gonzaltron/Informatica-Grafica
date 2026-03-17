@@ -12,6 +12,16 @@ void InputManager::Initialise(GLFWwindow* newwindow)
 	glfwSetKeyCallback(window, handleKeys);
 }
 
+bool InputManager::isKeyPressed(int key)
+{
+	auto it = keyState.find(key);
+	if (it != keyState.end())
+	{
+		return it->second;
+	}
+	return false;
+}
+
 void InputManager::handleKeys(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	if (!instance) return;
