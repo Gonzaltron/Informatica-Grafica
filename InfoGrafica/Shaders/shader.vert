@@ -12,5 +12,5 @@ out vec4 vColor;
 void main(){
     gl_Position = projection*view*model*vec4(pos.x, pos.y, pos.z, 1);
     vColor = vec4(clamp(pos, 0.0f, 1.0f), 1.0f);
-    normal = mat3(transpose(inverse(view * model)*norms))
+    normal = normalize(mat3(transpose(inverse(view * model)))*norms);
 }

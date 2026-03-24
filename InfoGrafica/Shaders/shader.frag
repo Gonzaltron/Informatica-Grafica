@@ -6,6 +6,8 @@ struct LuzDireccional
 {
     vec3 color;
     float ambientInten;
+    uniform vec3 LightDir;
+    uniform float difusseIntensity;
 };
 uniform LuzDireccional luzDir;
 out vec4 colour;

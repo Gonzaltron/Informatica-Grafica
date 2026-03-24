@@ -20,6 +20,8 @@ public:
 	GLuint GetIdView() { return uniformView; }
 	GLuint GetIdAmbientColor() { return uniformAmbientColor; }
 	GLuint GetIdAmbientIntensity() { return uniformAmbientIntensity; }
+	GLuint GetIdLightDir() { return uniformLightDir; }
+	GLuint GetIdDiffuseInten() { return uniformDiffuseIntensity; }
 
 	void useShader();
 	void deleteShader();
@@ -28,7 +30,7 @@ public:
 
 
 private:
-	GLuint idShader = 0, uniformModel = 0, uniformProjection  = 0, uniformView = 0;
+	GLuint idShader = 0, uniformModel = 0, uniformProjection = 0, uniformView = 0, uniformLightDir = 0, uniformDiffuseIntensity = 0;
 	GLuint uniformAmbientColor, uniformAmbientIntensity;
 	std::string ReadFile(const char* path);
 	void AddShader(const char* shaderCode, GLenum shaderType);

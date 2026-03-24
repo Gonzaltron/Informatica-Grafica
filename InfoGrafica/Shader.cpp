@@ -122,5 +122,7 @@ void Shader::CompileShader(const char* vertexCode, const char* fragmentCode)
     uniformView = glGetUniformLocation(idShader, "view");
     uniformAmbientColor = glGetUniformLocation(idShader, "luzDir.color");
     uniformAmbientIntensity = glGetUniformLocation(idShader, "luzDir.ambientInten");
+    uniformLightDir = glGetUniformLocation(idShader, "Luz.lightDir");
+    uniformDiffuseInten = glGetUniformLocation(idShader, "Luz.diffuseInten");
 
 }
