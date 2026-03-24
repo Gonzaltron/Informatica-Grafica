@@ -17,6 +17,7 @@
 #include "Window.h"
 #include "InputManager.h"
 #include "Camera.h"
+#include "Light.h"
 
 const GLint WIDTH = 800, HEIGHT = 600;
 const float TORADIANS = M_PI / 180.0f;
@@ -30,6 +31,7 @@ std::vector<Shader*> shaderList;
 
 InputManager input;
 Camera mainCamera;
+Light luzDireccional;
 
 //Vertex shader
 static const char* vShader = "Shaders/shader.vert";
@@ -39,10 +41,10 @@ static const char* fShader = "Shaders/shader.frag";
 
 void CreateTriangle() {
     GLfloat vertices[] = {
-        -1.0f, -1.0f, 0.0f,
-        0.0f, -1.0f, -1.0f,
-        1.0f, -1.0f, 0.0f,
-        0.0f, 1.0f, 0.0f
+        -1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+        0.0f, -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+        1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+        0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
     };
     GLuint indices[] = {
         0, 3, 1,
@@ -51,6 +53,7 @@ void CreateTriangle() {
         0, 2 ,1
     };
     Mesh* newMesh = new Mesh();
+    newMesh->RecalculateNormals(vertices, indices, 24, 12, 6, 3);
     newMesh->CreateMesh(vertices, indices, 12, 12);
     meshList.push_back(newMesh);
 }
@@ -75,6 +78,7 @@ int main()
         1.0f,
         glm::vec3(0.0f, 1.0f, 0.0f)
     );
+    luzDireccional = Light(glm::vec3(1.0f, 1.0f, 1.0f), 10.0f);
 
     CreateShader();
     CreateTriangle();
@@ -94,7 +98,9 @@ int main()
         deltaTime = currentTime - lastTime;
         lastTime = currentTime;
 
-        mainCamera.update(input, deltaTime);
+        //mainCamera.update(input, deltaTime);
+
+        luzDireccional.UseLight(shaderList[0]->GetIdAmbientColor(), shaderList[0]->GetIdAmbientIntensity());
 
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
