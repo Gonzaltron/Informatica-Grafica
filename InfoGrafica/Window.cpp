@@ -34,6 +34,9 @@ int Window::Initialize()
     glfwGetFramebufferSize(window, &bufferWidth, &bufferHeight);
 
     glfwMakeContextCurrent(window);
+
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
     glewExperimental = GL_TRUE;
     if (glewInit() != GLEW_OK) {
         printf("GLEW ha fallado al inicializarse");

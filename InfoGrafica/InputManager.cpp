@@ -14,13 +14,13 @@ void InputManager::Initialise(GLFWwindow* newwindow)
 	glfwSetKeyCallback(window, handleKeys);
 	glfwSetCursorPosCallback(window, handleMouse);
 
+
 }
 
 bool InputManager::isKeyPressed(int key)
 {
 	auto it = keyState.find(key);
-	if (it != keyState.end())
-	{
+	if (it != keyState.end()) {
 		return it->second;
 	}
 	return false;
@@ -37,12 +37,22 @@ void InputManager::handleKeys(GLFWwindow* window, int key, int scancode, int act
 
 }
 
-void InputManager::handleMouse(GLFWwindow* wondow, double posX, double posY)
+void InputManager::handleMouse(GLFWwindow* window, double posX, double posY)
 {
 	if (!instance) return;
-	instance->deltaX = posX - instance -> lastX;
-	instance->deltaY = posY - instance -> lastY;
+	if (instance->firstMove) {
+		instance->lastX = posX;
+		instance->lastY = posY;
+		instance->deltaX = 0.0f;
+		instance->deltaY = 0.0f;
+		instance->firstMove = false;
+		return;
+	}
+	instance->deltaX = posX - instance->lastX;
+	instance->deltaY = posY - instance->lastY;
 
 	instance->lastX = posX;
 	instance->lastY = posY;
 }
+
+
