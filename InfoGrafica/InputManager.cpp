@@ -5,6 +5,10 @@ InputManager* InputManager::instance = nullptr;
 InputManager::InputManager()
 {
 	window = nullptr;
+	lastX = 0.0f;
+	lastY = 0.0f;
+	deltaX = 0.0f;
+	deltaY = 0.0f;
 }
 
 void InputManager::Initialise(GLFWwindow* newwindow)

@@ -30,7 +30,7 @@ void Camera::update(InputManager& input, float deltaTime)
 	if (input.isKeyPressed(GLFW_KEY_E)) pos -= up * moveSpeed * deltaTime;
 
 	yaw += input.getMouseDeltaX() * turnSpeed * deltaTime;
-	pitch += input.getMouseDeltaY() * turnSpeed * deltaTime;
+	pitch -= input.getMouseDeltaY() * turnSpeed * deltaTime;
 
 	if (pitch > 89.9f) pitch = 89.9f;
 	else if (pitch < -89.9f) pitch = -89.9f;
