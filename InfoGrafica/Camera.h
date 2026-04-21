@@ -13,6 +13,7 @@ public:
 	Camera(glm::vec3 startPos, float startYaw, float startPitch, float startMoveSpeed, float startTurnSpeed, glm::vec3 startWorldUp);
 	void update(InputManager& input, float deltaTime);
 	glm::mat4 getViewMatrix();
+	const glm::vec3& getCameraPos() { return pos; }
 
 private:
 	glm::vec3 pos;

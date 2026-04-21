@@ -2,15 +2,16 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
+#include "Shader.h"
 class Light
 {
 public:
 	Light();
-	Light(glm::vec3 color, GLfloat ambientIntensity, glm::vec3 dir, GLfloat diffuseIntensity);
-	void UseLight(GLfloat colorLocation, GLfloat aIntensityLocation, GLfloat directionLocation, GLfloat dIntensityLocation);
+	Light(glm::vec3 color, GLfloat ambientIntensity, GLfloat diffuseIntensity);
 	~Light();
-private:
-	glm::vec3 direction;
+protected:
+	void UseLight(UniformBaseLight baseLight);
 	glm::vec3 color;
 	GLfloat aInstensity;
 	GLfloat dIntensity;
