@@ -33,6 +33,36 @@ void Mesh::CreateMesh(GLfloat* vertices, GLuint* indices, GLuint numVertices, GL
     glBindVertexArray(0);
 }
 
+void Mesh::CreateMeshFromVertices(vertex_t* vertices, GLuint* indices, GLuint numVertices, GLsizei numIndices)
+{
+    indexCount = numIndices;
+    glGenVertexArrays(1, &VAO); //Genera y devuelve id
+    glBindVertexArray(VAO); //Activa VAO
+
+    glGenBuffers(1, &EBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices[0]) * numIndices, indices, GL_STATIC_DRAW);
+
+    glGenBuffers(1, &VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices[0]) * numVertices, vertices, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertex_t), (void*)offsetof(vertex_t, vPos));
+    glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(vertex_t), (void*)offsetof(vertex_t, vNorm));
+    glEnableVertexAttribArray(1);
+
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(vertex_t), (void*)offsetof(vertex_t, vTextCoords));
+    glEnableVertexAttribArray(2);
+
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+}
+
+
 void Mesh::DeleteMesh()
 {
     if (VAO != 0) {

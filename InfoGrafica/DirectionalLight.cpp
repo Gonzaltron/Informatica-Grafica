@@ -10,7 +10,7 @@ DirectionalLight::DirectionalLight(glm::vec3 color, GLfloat ambientIntensity, GL
 	direction = dir;
 }
 
-void DirectionalLight::UseLight(UniformDirectionalLigh uniformDirLight)
+void DirectionalLight::UseLight(UniformDirectionalLight uniformDirLight)
 {
 	Light::UseLight(uniformDirLight.base);
 	glUniform3f(uniformDirLight.uniformDir, direction.x, direction.y, direction.z);

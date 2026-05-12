@@ -121,13 +121,27 @@ void Shader::CompileShader(const char* vertexCode, const char* fragmentCode)
     uniformProjection = glGetUniformLocation(idShader, "projection");
     uniformView = glGetUniformLocation(idShader, "view");
     uniformCameraPos = glGetUniformLocation(idShader, "cameraPos");
+    uniformTime = glGetUniformLocation(idShader, "time");
+
+
+    uniformTime = glGetUniformLocation(idShader, "colorMap");
+
+
     uniformDirLight.base.uniformColor = glGetUniformLocation(idShader, "directionalLight.base.color");
     uniformDirLight.base.uniformAmbientInten = glGetUniformLocation(idShader, "directionalLight.base.ambientInten");
     uniformDirLight.base.uniformDiffuseInten = glGetUniformLocation(idShader, "directionalLight.base.diffuseInten");
     uniformDirLight.uniformDir = glGetUniformLocation(idShader, "directionalLight.lightDir");
+
+    uniformPointLight.base.uniformColor = glGetUniformLocation(idShader, "pointLight.base.color");
+    uniformPointLight.base.uniformAmbientInten = glGetUniformLocation(idShader, "pointLight.base.ambientInten");
+    uniformPointLight.base.uniformDiffuseInten = glGetUniformLocation(idShader, "pointLight.base.diffuseInten");
+    uniformPointLight.uniformPos = glGetUniformLocation(idShader, "pointLight.pos");
+    uniformPointLight.uniformConstant = glGetUniformLocation(idShader, "pointLight.constV");
+    uniformPointLight.uniformLinear = glGetUniformLocation(idShader, "pointLight.linearV");
+    uniformPointLight.uniformExponential = glGetUniformLocation(idShader, "pointLight.exponentialV");
+
+
+
     uniformShininess = glGetUniformLocation(idShader, "shininess");
     uniformSpecularInten = glGetUniformLocation(idShader, "specularInten");
-    uniformTime = glGetUniformLocation(idShader, "time");
-
-
 }

@@ -1,4 +1,7 @@
 #version 330
+
+const int TAM_POINT_LIGHTS = 6;
+
 in vec4 vColor;
 in vec3 normal;
 in vec3 posFrag;
@@ -18,39 +21,65 @@ struct DirectionalLight{
 struct PointLight{
     BaseLight base;
     vec3 pos;
-    float const;
-    float lineal;
-    float exponential;
-}
+    float constV;
+    float linearV;
+    float exponentialV;
+};
 
 uniform DirectionalLight directionalLight;
+uniform PointLight pointLight;
+uniform PointLight[TAM_POINT_LIGHTS] pointLights;
+uniform int numPointLights;
 uniform vec3 cameraPos;
 uniform float specularInten;
 uniform float shininess;
 uniform float time;
 
+uniform sampler2D colorMap;
+
 out vec4 colour;
-void main(){
+
+vec3 CalculateLightValues(BaseLight bl, vec3 norm, vec3 lDir, vec3 viewDir){
+    //Ambient
+    vec3 ambient = bl.ambientInten * bl.color;
+    //Diffuse
+    float diff = max(dot(norm, lDir), 0.0f);
+    vec3 diffuse = bl.color * bl.diffuseInten * diff;
+    //Specular
+    vec3 halfWayVec = normalize(lDir + viewDir);
+    float spec = pow(max(dot(norm, halfWayVec), 0.0f), shininess);
+    vec3 specular = bl.color * specularInten * spec;
+    return ambient + diffuse + specular;
+}
+
+
+vec3 CalculateDirectionalLight(DirectionalLight dirLight){
     vec3 norm = normalize(normal);
     vec3 lDir  = normalize(directionalLight.lightDir);
     vec3 viewDir = normalize(cameraPos - posFrag);
 
-    //Ambient
-    vec3 ambient = directionalLight.base.ambientInten * directionalLight.base.color;
-    //Diffuse
-    float diff = max(dot(norm, lDir), 0.0f);
-    vec3 diffuse = directionalLight.base.color * directionalLight.base.diffuseInten * diff;
-    //Specular
-    vec3 halfWayVec = normalize(lDir + viewDir);
-    float spec = pow(max(dot(norm, halfWayVec), 0.0f), shininess);
-    vec3 specular = directionalLight.base.color * specularInten * spec;
+    return CalculateLightValues(dirLight.base, norm, lDir, viewDir);
 
+}
 
-    vec3 luzFinal = ambient + diffuse + specular;
+vec3 CalculatePointLight(PointLight pLight){
+    vec3 norm = normalize(normal);
+    vec3 lDir  = normalize(posFrag - pLight.pos);
+    vec3 viewDir = normalize(cameraPos - posFrag);
 
+    float d = distance(posFrag, pLight.pos);
+    float attenuation = 1/(pLight.exponentialV * d *d +  pLight.linearV * d + pLight.constV);
 
-    float vel = 0.9*10 + 0.1*(cos(time + posFrag.x * 100) + 1)/2;
-    float val1 = (clamp((cos(time * vel + posFrag.y*10)+1)/2, 0.9, 1) + 0.1);
-    float val2 = (clamp((cos(time * vel*3 + posFrag.y*100)+1)/2, 0.9, 1) + 0.1);
-    colour = vec4(uvFrag.x, uvFrag.y, 0, 1 )*val1*val2 * vec4(luzFinal, 1.0); 
+    return CalculateLightValues(pLight.base, norm, lDir, viewDir) * attenuation;
+}
+
+void main(){
+    
+    vec3 texColor = texture(colorMap, uvFrag).rgb;
+
+    vec3 luzFinal = vec3(0.0f);
+    luzFinal += CalculateDirectionalLight(directionalLight);
+    luzFinal += CalculatePointLight(pointLight);
+
+    colour = vec4(vec3(1,0,0)*luzFinal, 1.0); 
 }

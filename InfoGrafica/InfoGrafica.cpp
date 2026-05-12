@@ -1,6 +1,6 @@
 // InfoGrafica.cpp : Este archivo contiene la función "main". La ejecución del programa comienza y termina ahí.
 #define _USE_MATH_DEFINES
-
+#define STB_IMAGE_IMPLEMENTATION
 
 #include <iostream>
 #include <cmath>
@@ -12,6 +12,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "common.h"
+
 #include "Mesh.h"
 #include "Shader.h"
 #include "Window.h"
@@ -19,7 +21,10 @@
 #include "Camera.h"
 #include "Light.h"
 #include "DirectionalLight.h"
+#include "PointLight.h"
 #include "Material.h"
+#include "OBJLoader.h"
+#include "Texture.h"
 
 const GLint WIDTH = 800, HEIGHT = 600;
 const float TORADIANS = M_PI / 180.0f;
@@ -34,7 +39,13 @@ std::vector<Shader*> shaderList;
 InputManager input;
 Camera mainCamera;
 DirectionalLight luzDireccional;
+PointLight pointLight;
+
+PointLight pointLightArray[TAM_POINT_LIGHTS];
+unsigned int numPointLight;
+
 Material mat;
+Texture texturaEjemplo;
 //Vertex shader
 static const char* vShader = "Shaders/shader.vs";
 //Fragment shader
@@ -61,6 +72,17 @@ void CreateTriangle() {
     meshList.push_back(newMesh);
 }
 
+void CreateModelFromOBJ() {
+    std::vector<vertex_t> vertices;
+    std::vector<GLuint> indices;
+    if (!LoadOBJ("Assets/susan.obj", vertices, indices)) {
+        std::cout << "Error cargando OBJ" << std::endl;
+        return;
+    }
+    Mesh* newMesh = new Mesh();
+    newMesh->CreateMeshFromVertices(vertices.data(), indices.data(), vertices.size(), indices.size());
+    meshList.push_back(newMesh);
+}
 
 void CreateShader() {
     Shader* shader = new Shader();
@@ -82,11 +104,13 @@ int main()
         glm::vec3(0.0f, 1.0f, 0.0f)
     );
     luzDireccional = DirectionalLight(glm::vec3(1.0f, 1.0f, 1.0f), 0.1f, 1, glm::vec3(-0.4f, -1.0f, 0.0f));
+    pointLight = PointLight(glm::vec3(1.0f, 1.0f, 1.0f), 0.1f, 1, glm::vec3(-2.0f, 2.0f, -3.0f), 0.01f, 1.0f, 1.0f);
     mat = Material(2, 20);
-
+    texturaEjemplo = Texture("Assets/Textures/marble_cliff_02_1k/textures/marble_cliff_02_diff_1k.jpg");
+    texturaEjemplo.LoadTexture();
     CreateShader();
-    CreateTriangle();
-
+    //CreateTriangle();
+    CreateModelFromOBJ();
     glm::mat4 projeccion = glm::perspective(glm::radians(45.0f), mainWindow.getBufferWidth() / (GLfloat)mainWindow.getBufferHeight(), 0.1f, 100.0f);
 
 
@@ -111,6 +135,10 @@ int main()
         shaderList[0]->useShader();
 
         luzDireccional.UseLight(shaderList[0]->GetIdDirectionalLight());
+        pointLight.UseLight(shaderList[0]->GetIdPointLight());
+
+        texturaEjemplo.UseTexture();
+        glUniform1i(shaderList[0]->GetIdColorMap(), 0);
 
         glm::mat4 model(1.0f);
         model = glm::translate(model, glm::vec3(0, 0.0f, 0.0f));
@@ -126,5 +154,4 @@ int main()
 
         mainWindow.swapBuffers();
     }
-
 }
